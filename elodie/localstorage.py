@@ -5,6 +5,7 @@ from builtins import map
 from builtins import object
 
 import hashlib
+import xxhash
 import json
 import os
 import sys
@@ -119,7 +120,8 @@ class Db(object):
             creating the hash.
         :returns: str or None
         """
-        hasher = hashlib.sha256()
+        #hasher = hashlib.sha256()
+        hasher = xxhash.xxh64()
         with open(file_path, 'rb') as f:
             buf = f.read(blocksize)
 
