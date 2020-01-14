@@ -38,10 +38,6 @@ class XX64:
             return hasher.hexdigest()
         return None
 
-class MD5:
-    def digest(self):
-        return ""
-
 class SHA256:
     def digest(self, file_path, blocksize=65536):
         hasher = hashlib.sha256()
