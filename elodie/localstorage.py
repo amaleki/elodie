@@ -15,6 +15,7 @@ from shutil import copyfile
 from time import strftime
 
 from elodie import constants
+from elodie.hash_factory import HashFactory
 
 
 class Db(object):
@@ -50,6 +51,8 @@ class Db(object):
                 os.utime(constants.location_db, None)
 
         self.location_db = []
+
+        self.hasher = HashFactory()
 
         # We know from above that this file exists so we open it
         #   for reading only.
@@ -110,26 +113,16 @@ class Db(object):
         """
         return key in self.hash_db
 
-    def checksum(self, file_path, blocksize=65536):
+    def checksum(self, file_path, hash_type='SHA256', blocksize=65536):
         """Create a hash value for the given file.
-
-        See http://stackoverflow.com/a/3431835/1318758.
 
         :param str file_path: Path to the file to create a hash for.
         :param int blocksize: Read blocks of this size from the file when
             creating the hash.
         :returns: str or None
         """
-        #hasher = hashlib.sha256()
-        hasher = xxhash.xxh64()
-        with open(file_path, 'rb') as f:
-            buf = f.read(blocksize)
 
-            while len(buf) > 0:
-                hasher.update(buf)
-                buf = f.read(blocksize)
-            return hasher.hexdigest()
-        return None
+        return self.hasher.digest(file_path, hash_type, blocksize)
 
     def get_hash(self, key):
         """Get the hash value for a given key.
